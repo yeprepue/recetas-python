@@ -16,7 +16,7 @@ Aplicación web para buscar y explorar recetas de comida consumiendo [TheMealDB 
 - [Despliegue en producción](#despliegue-en-producción)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Mantenimiento y contribución](#mantenimiento-y-contribución)
-
+- [URL](#URL)
 ---
 
 ## Qué es Recetario Python
@@ -30,6 +30,13 @@ Recetario Python es una app web responsiva que permite:
 - Obtener recetas aleatorias
 
 El frontend usa **Tailwind CSS** para adaptarse a móviles, tablets y escritorio.
+
+
+##URL
+```txt
+URL: 
+https://recetas-python.onrender.com/
+```
 
 ---
 
@@ -272,6 +279,6 @@ Abre un issue en el repositorio describiendo:
 
 
 
-## Licencia
+##Licencia
 
 Proyecto educativo. Consume la API pública de TheMealDB bajo sus términos de uso.
