@@ -34,7 +34,6 @@ El frontend usa **Tailwind CSS** para adaptarse a móviles, tablets y escritorio
 
 ##URL
 ```txt
-URL: 
 https://recetas-python.onrender.com/
 ```
 
