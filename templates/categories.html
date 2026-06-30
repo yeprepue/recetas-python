@@ -3,25 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categorías</title>
+    <title>{{ t.t('categories') }} - {{ t.t('app_name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
     <nav class="bg-blue-600 text-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <a href="/" class="text-xl font-bold">🍳 Recetario</a>
-            <form action="/search" method="get" class="flex gap-2 w-full md:w-auto">
-                <input type="text" name="q" placeholder="Buscar comida..." 
-                    class="px-4 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 w-full md:w-64">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded transition">
-                    Buscar
-                </button>
-            </form>
+            <a href="/" class="text-xl font-bold">🍳 {{ t.t('app_name') }}</a>
+            <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                <form action="/search" method="get" class="flex gap-2">
+                    <input type="text" name="q" placeholder="{{ t.t('search_placeholder') }}" 
+                        class="px-4 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 w-full md:w-64">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded transition">
+                        {{ t.t('search_button') }}
+                    </button>
+                </form>
+                <select onchange="window.location.href='/set-language/' + this.value" class="px-3 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    {% for code, name in t.get_available_languages().items() %}
+                    <option value="{{ code }}" {% if t.language == code %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
     </nav>
 
+    <div class="bg-blue-700 text-white">
+        <div class="container mx-auto px-4">
+            <ul class="flex flex-wrap gap-4 py-2">
+                <li><a href="/" class="hover:underline">{{ t.t('home') }}</a></li>
+                <li><a href="/categories" class="hover:underline">{{ t.t('categories') }}</a></li>
+                <li><a href="/areas" class="hover:underline">{{ t.t('areas') }}</a></li>
+                <li><a href="/ingredients" class="hover:underline">{{ t.t('ingredients') }}</a></li>
+            </ul>
+        </div>
+    </div>
+
     <main class="container mx-auto px-4 py-8">
-        <h1 class="text-2xl md:text-3xl font-bold mb-6">Categorías</h1>
+        <h1 class="text-2xl md:text-3xl font-bold mb-6">{{ t.t('categories') }}</h1>
         
         {% if categories %}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -36,13 +54,13 @@
             {% endfor %}
         </div>
         {% else %}
-        <p class="text-gray-500">No hay categorías disponibles.</p>
+        <p class="text-gray-500">{{ t.t('no_results') }}</p>
         {% endif %}
     </main>
 
     <footer class="bg-gray-800 text-white py-6 mt-12">
         <div class="container mx-auto px-4 text-center">
-            <p>Recetario Python © 2026</p>
+            <p>{{ t.t('footer_text') }}</p>
         </div>
     </footer>
 </body>

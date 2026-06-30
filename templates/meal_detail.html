@@ -3,24 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ meal.name }} - Receta</title>
+    <title>{{ meal.name }} - {{ t.t('app_name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
     <nav class="bg-blue-600 text-white shadow-md">
-        <div class="container mx-auto px-4 py-4">
-            <a href="/" class="text-xl font-bold">🍳 Recetario</a>
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="/" class="text-xl font-bold">🍳 {{ t.t('app_name') }}</a>
+            <select onchange="window.location.href='/set-language/' + this.value" class="px-3 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                {% for code, name in t.get_available_languages().items() %}
+                <option value="{{ code }}" {% if t.language == code %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
         </div>
     </nav>
 
+    <div class="bg-blue-700 text-white">
+        <div class="container mx-auto px-4">
+            <ul class="flex flex-wrap gap-4 py-2">
+                <li><a href="/" class="hover:underline">{{ t.t('home') }}</a></li>
+                <li><a href="/categories" class="hover:underline">{{ t.t('categories') }}</a></li>
+                <li><a href="/areas" class="hover:underline">{{ t.t('areas') }}</a></li>
+                <li><a href="/ingredients" class="hover:underline">{{ t.t('ingredients') }}</a></li>
+            </ul>
+        </div>
+    </div>
+
     <main class="container mx-auto px-4 py-8">
-        <a href="javascript:history.back()" class="text-blue-600 hover:underline mb-6 inline-block">← Volver</a>
+        <a href="javascript:history.back()" class="text-blue-600 hover:underline mb-6 inline-block">{{ t.t('back') }}</a>
         
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="md:flex">
                 <div class="md:w-1/2">
                     <img src="{{ meal.image_url }}" alt="{{ meal.name }}" 
-                         class="w-full h-64 md:h-full object-cover">
+                         class="w-full h-64 md:h-full object-contain">
                 </div>
                 <div class="p-6 md:w-1/2">
                     <h1 class="text-3xl font-bold mb-4">{{ meal.name }}</h1>
@@ -38,10 +54,10 @@
                         {% endif %}
                     </div>
 
-                    {% if meal.ingredients %}
-                    <h3 class="text-xl font-bold mb-3">Ingredientes</h3>
+                    {% if meal.ingredient_measures %}
+                    <h3 class="text-xl font-bold mb-3">{{ t.t('ingredients_title') }}</h3>
                     <ul class="mb-6">
-                        {% for ing, measure in meal.ingredients | zip(meal.measures) %}
+                        {% for ing, measure in meal.ingredient_measures %}
                         <li class="py-1 border-b border-gray-100">
                             {{ ing }} {% if measure %}- <span class="text-gray-500">{{ measure }}</span>{% endif %}
                         </li>
@@ -50,18 +66,30 @@
                     {% endif %}
 
                     {% if meal.instructions %}
-                    <h3 class="text-xl font-bold mb-3">Instrucciones</h3>
+                    <h3 class="text-xl font-bold mb-3">{{ t.t('instructions_title') }}</h3>
                     <div class="prose max-w-none text-gray-700 whitespace-pre-line">
                         {{ meal.instructions }}
                     </div>
                     {% endif %}
 
-                    {% if meal.youtube_url %}
+                    {% if meal.youtube_video_id %}
                     <div class="mt-6">
+                        <h3 class="text-xl font-bold mb-3">{{ t.t('youtube_video') }}</h3>
+                        <div class="relative pb-[56.25%] h-0 overflow-hidden rounded shadow">
+                            <iframe 
+                                src="https://www.youtube.com/embed/{{ meal.youtube_video_id }}" 
+                                class="absolute top-0 left-0 w-full h-full" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        {% if meal.youtube_url %}
                         <a href="{{ meal.youtube_url }}" target="_blank" 
-                           class="inline-block bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700 transition">
-                            Ver video en YouTube
+                           class="inline-block mt-4 bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700 transition">
+                            {{ t.t('youtube_video') }}
                         </a>
+                        {% endif %}
                     </div>
                     {% endif %}
 
@@ -69,7 +97,7 @@
                     <div class="mt-4">
                         <a href="{{ meal.source }}" target="_blank" 
                            class="text-blue-600 hover:underline text-sm">
-                            Fuente original
+                            {{ t.t('original_source') }}
                         </a>
                     </div>
                     {% endif %}
@@ -80,7 +108,7 @@
 
     <footer class="bg-gray-800 text-white py-6 mt-12">
         <div class="container mx-auto px-4 text-center">
-            <p>Recetario Python © 2026</p>
+            <p>{{ t.t('footer_text') }}</p>
         </div>
     </footer>
 </body>

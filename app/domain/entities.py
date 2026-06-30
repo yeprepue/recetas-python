@@ -1,5 +1,8 @@
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Optional, List, Tuple
+import re
+
+YOUTUBE_ID_PATTERN = re.compile(r"(?:v=|\/)([0-9A-Za-z_-]{11}).*")
 
 
 @dataclass
@@ -17,6 +20,8 @@ class Meal:
     ingredients: List[str] = field(default_factory=list)
     measures: List[str] = field(default_factory=list)
     source: Optional[str] = None
+    ingredient_measures: List[Tuple[str, str]] = field(default_factory=list)
+    youtube_video_id: Optional[str] = None
 
 
 @dataclass

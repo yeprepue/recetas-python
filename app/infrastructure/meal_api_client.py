@@ -1,14 +1,17 @@
 import httpx
+import re
 from typing import List, Optional
 from app.domain.entities import Meal, Category, Area, Ingredient
+from app.i18n.content_translator import ContentTranslator
 
 BASE_URL = "https://www.themealdb.com/api/json/v1/1"
 
 
 class MealApiClient:
-    def __init__(self, base_url: str = BASE_URL):
+    def __init__(self, base_url: str = BASE_URL, target_language: str = "es"):
         self.base_url = base_url
         self.timeout = 10.0
+        self.translator = ContentTranslator(target_language)
 
     async def _get(self, path: str, params: dict = None) -> dict:
         async with httpx.AsyncClient(timeout=self.timeout) as client:
@@ -52,9 +55,9 @@ class MealApiClient:
         return [
             Category(
                 id=str(c.get("idCategory")),
-                name=c.get("strCategory"),
+                name=self.translator.translate(c.get("strCategory")),
                 thumbnail_url=c.get("strCategoryThumb"),
-                description=c.get("strCategoryDescription", ""),
+                description=self.translator.translate(c.get("strCategoryDescription", "")),
             )
             for c in categories
         ]
@@ -64,7 +67,7 @@ class MealApiClient:
         areas = data.get("meals")
         if not areas:
             return []
-        return [Area(name=a.get("strArea")) for a in areas]
+        return [Area(name=self.translator.translate(a.get("strArea"))) for a in areas]
 
     async def get_ingredients(self) -> List[Ingredient]:
         data = await self._get("list.php", {"i": "list"})
@@ -74,9 +77,9 @@ class MealApiClient:
         return [
             Ingredient(
                 id=str(i.get("idIngredient")),
-                name=i.get("strIngredient"),
-                description=i.get("strDescription", ""),
-                type=i.get("strType", ""),
+                name=self.translator.translate(i.get("strIngredient")),
+                description=self.translator.translate(i.get("strDescription", "")),
+                type=self.translator.translate(i.get("strType", "")),
             )
             for i in ingredients
         ]
@@ -103,41 +106,45 @@ class MealApiClient:
         return [self._map_meal_filtered(m) for m in meals]
 
     def _map_meal(self, data: dict) -> Meal:
-        ingredients = []
-        measures = []
+        ingredient_measures = []
         for i in range(1, 21):
             ingredient = data.get(f"strIngredient{i}")
             measure = data.get(f"strMeasure{i}")
             if ingredient:
-                ingredients.append(ingredient)
-            if measure:
-                measures.append(measure)
+                translated_ing = self.translator.translate(ingredient)
+                translated_measure = self.translator.translate(measure) if measure else ""
+                ingredient_measures.append((translated_ing, translated_measure))
 
-        image_url = data.get("strMealThumb")
-        if image_url:
-            image_url = image_url + "/preview"
+        youtube_url = data.get("strYoutube")
+        youtube_video_id = None
+        if youtube_url:
+            match = re.search(r"(?:v=|\/)([0-9A-Za-z_-]{11})", youtube_url)
+            if match:
+                youtube_video_id = match.group(1)
 
         return Meal(
             id=str(data.get("idMeal")),
-            name=data.get("strMeal"),
-            alternate_name=data.get("strAlternate"),
-            category=data.get("strCategory"),
-            area=data.get("strArea"),
-            instructions=data.get("strInstructions"),
+            name=self.translator.translate(data.get("strMeal")),
+            alternate_name=self.translator.translate(data.get("strAlternate")),
+            category=self.translator.translate(data.get("strCategory")),
+            area=self.translator.translate(data.get("strArea")),
+            instructions=self.translator.translate(data.get("strInstructions")),
             image_url=data.get("strMealThumb"),
             video_url=data.get("strYoutube"),
             tags=data.get("strTags"),
-            youtube_url=data.get("strYoutube"),
-            ingredients=ingredients,
-            measures=measures,
+            youtube_url=youtube_url,
+            ingredients=[],
+            measures=[],
             source=data.get("strSource"),
+            ingredient_measures=ingredient_measures,
+            youtube_video_id=youtube_video_id,
         )
 
     def _map_meal_filtered(self, data: dict) -> Meal:
         return Meal(
             id=str(data.get("idMeal")),
-            name=data.get("strMeal"),
+            name=self.translator.translate(data.get("strMeal")),
             image_url=data.get("strMealThumb"),
-            category=data.get("strCategory"),
-            area=data.get("strArea"),
+            category=self.translator.translate(data.get("strCategory")),
+            area=self.translator.translate(data.get("strArea")),
         )
