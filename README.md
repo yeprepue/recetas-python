@@ -260,6 +260,17 @@ Abre un issue en el repositorio describiendo:
 - Versión de Python y SO
 
 ---
+##Imagenes
+
+<img width="1282" height="955" alt="image" src="https://github.com/user-attachments/assets/acd66c13-1069-4647-8b37-dc39580cf1aa" />
+<img width="389" height="871" alt="image" src="https://github.com/user-attachments/assets/33a3f338-301a-4463-a797-0d64ad6d243e" />
+<img width="1904" height="921" alt="image" src="https://github.com/user-attachments/assets/e40e9d78-fbaa-43b4-bd8b-794ed9506aa4" />
+<img width="1895" height="946" alt="image" src="https://github.com/user-attachments/assets/86befe54-3bbc-4b2d-b2ff-8a100b5e9b43" />
+<img width="1901" height="950" alt="image" src="https://github.com/user-attachments/assets/b9b8eabd-0661-4fc6-8d7f-d9caec0ff680" />
+<img width="1284" height="952" alt="image" src="https://github.com/user-attachments/assets/040db57a-9932-420c-8265-5466877a1beb" />
+
+
+
 
 ## Licencia
 
