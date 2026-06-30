@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetario - Inicio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <nav class="bg-blue-600 text-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold">🍳 Recetario</a>
+            <form action="/search" method="get" class="flex gap-2">
+                <input type="text" name="q" placeholder="Buscar comida..." 
+                    class="px-4 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded transition">
+                    Buscar
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">Encuentra tu próxima receta</h1>
+        
+        {% if random_meal %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <div class="md:flex">
+                <div class="md:w-1/3">
+                    <img src="{{ random_meal.image_url }}" alt="{{ random_meal.name }}" 
+                         class="w-full h-64 md:h-full object-cover">
+                </div>
+                <div class="p-6 md:w-2/3">
+                    <span class="text-sm text-blue-600 font-semibold">Receta aleatoria</span>
+                    <h2 class="text-3xl font-bold mt-2 mb-4">{{ random_meal.name }}</h2>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% if random_meal.category %}
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm">
+                            {{ random_meal.category }}
+                        </span>
+                        {% endif %}
+                        {% if random_meal.area %}
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded text-sm">
+                            {{ random_meal.area }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <p class="text-gray-600 mb-6 line-clamp-3">
+                        {{ random_meal.instructions[:300] }}...
+                    </p>
+                    <a href="/meal/{{ random_meal.id }}" 
+                       class="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
+                        Ver receta completa
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="/categories" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                <h3 class="text-xl font-bold mb-2">📂 Categorías</h3>
+                <p class="text-gray-600">Explora por categoría</p>
+            </a>
+            <a href="/areas" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                <h3 class="text-xl font-bold mb-2">🌍 Áreas</h3>
+                <p class="text-gray-600">Explora por área geográfica</p>
+            </a>
+            <a href="/ingredients" class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                <h3 class="text-xl font-bold mb-2">🥕 Ingredientes</h3>
+                <p class="text-gray-600">Explora por ingrediente</p>
+            </a>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>Recetario Python © 2026 - Consumiendo TheMealDB API</p>
+        </div>
+    </footer>
+</body>
+</html>
